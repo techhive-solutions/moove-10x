@@ -52,7 +52,14 @@ $hasblocks = (strpos($blockshtml, 'data-block=') !== false || !empty($addblockbu
 if (!$hasblocks) {
     $blockdraweropen = false;
 }
-$courseindex = core_course_drawer();
+
+$themesettings = new \theme_moove\util\settings();
+if (!$themesettings->enablecourseindex) {
+    $courseindex = '';
+} else {
+    $courseindex = core_course_drawer();
+}
+
 if (!$courseindex) {
     $courseindexopen = false;
 }
@@ -114,11 +121,5 @@ $themesettings = new \theme_moove\util\settings();
 
 $templatecontext = array_merge($templatecontext, $themesettings->footer());
 
-$template = 'theme_moove/drawers';
-if (!isloggedin()) {
-    $templatecontext = array_merge($templatecontext, $themesettings->frontpage());
-
-    $template = 'theme_moove/frontpage';
-}
-
-echo $OUTPUT->render_from_template($template, $templatecontext);
+$templatecontext = array_merge($templatecontext, $themesettings->frontpage());
+echo $OUTPUT->render_from_template('theme_moove/frontpage', $templatecontext);
